@@ -1,0 +1,12 @@
+{
+  "name": "routesaverdata",
+  "private": true,
+  "type": "module",
+  "description": "Builds and publishes the UK fuel price feed used by the RouteSaver app",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build-feed.mjs public",
+    "test": "node --test scripts/",
+    "mock": "node scripts/mock-fuel-finder.mjs"
+  }
+}
