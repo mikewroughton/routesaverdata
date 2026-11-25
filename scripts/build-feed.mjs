@@ -41,18 +41,23 @@ async function request(url, init = {}) {
     } catch {
       body = undefined;
     }
-    return { status: res.status, body };
+    // Who answered and how: tells a Fuel Finder error apart from a CDN / firewall block.
+    const via = ['server', 'x-cache', 'content-type'].map((h) => `${h}=${res.headers.get(h) ?? '-'}`).join(' ');
+    return { status: res.status, body, raw: text.slice(0, 200).replace(/\s+/g, ' '), via };
   }
 }
 
 async function token(clientId, clientSecret) {
-  const { status, body } = await request(`${BASE}/oauth/generate_access_token`, {
+  const { status, body, raw, via } = await request(`${BASE}/oauth/generate_access_token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ client_id: clientId, client_secret: clientSecret }),
   });
   const t = body?.data?.access_token ?? body?.access_token;
-  if (status >= 400 || !t) throw new Error(`Token request failed (${status}): ${JSON.stringify(body)?.slice(0, 300)}`);
+  if (status >= 400 || !t) {
+    const detail = body ? JSON.stringify(body).slice(0, 300) : `non-JSON reply "${raw}"`;
+    throw new Error(`Token request failed (${status}, ${via}): ${detail}`);
+  }
   return t;
 }
 
