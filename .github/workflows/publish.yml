@@ -31,7 +31,7 @@ jobs:
           node-version: 22
 
       - name: Test
-        run: node --test scripts/
+        run: node --test scripts/feed.test.mjs
 
       # If this fails (API down, bad data, wrong secrets) nothing is deployed and the last good feed stays live.
       - name: Build feed from Fuel Finder

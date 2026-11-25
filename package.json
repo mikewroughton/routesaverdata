@@ -6,7 +6,7 @@
   "engines": { "node": ">=22" },
   "scripts": {
     "build": "node scripts/build-feed.mjs public",
-    "test": "node --test scripts/",
+    "test": "node --test scripts/feed.test.mjs",
     "mock": "node scripts/mock-fuel-finder.mjs"
   }
 }
