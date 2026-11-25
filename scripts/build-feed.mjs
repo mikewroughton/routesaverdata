@@ -108,6 +108,9 @@ async function main() {
 }
 
 main().catch((e) => {
-  console.error(e instanceof Error ? e.message : e);
+  const message = e instanceof Error ? e.message : String(e);
+  // In GitHub Actions, also raise an annotation so the reason shows on the run's summary page.
+  if (process.env.GITHUB_ACTIONS) console.log(`::error title=Fuel feed not published::${message.replace(/\r?\n/g, ' ')}`);
+  console.error(message);
   process.exit(1);
 });
